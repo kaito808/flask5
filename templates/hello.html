@@ -1,0 +1,9 @@
+{% extends 'base.html' %} {% block title %}This is the hello page{% endblock %}
+{% block content %}
+
+<h1>HELLO!</h1>
+<p>{{ session['fav_number'] }} test if its reclasdf</p>
+
+{% if session['fav_none'] %}
+<p>{{ session['fav_none'] }} test if its reclasdf</p>
+{% endif %} {% endblock %}
