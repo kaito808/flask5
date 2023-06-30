@@ -1,9 +1,197 @@
 {% extends 'base.html' %} {% block title %}This is the hello page{% endblock %}
 {% block content %}
+<h1>Welcome to our reading program!</h1>
+<p>Please choose the appropriate reading level to start exploring stories.</p>
+<div class="container">
+  <a href="/emergent-readers" class="button button--piyo">
+    <div class="button__wrapper">
+      <span class="button__text">PreK - K</span>
+    </div>
+    <div class="characterBox">
+      <div class="character wakeup">
+        <div class="character__face"></div>
+      </div>
+      <div class="character wakeup">
+        <div class="character__face"></div>
+      </div>
+      <div class="character">
+        <div class="character__face"></div>
+      </div>
+    </div>
+  </a>
 
-<h1>HELLO!</h1>
+  <a href="/early-readers" class="button button--hoo">
+    <div class="button__wrapper">
+      <span class="button__text">1st Grade</span>
+    </div>
+    <div class="characterBox">
+      <div class="character wakeup">
+        <div class="character__face"></div>
+        <div class="charactor__face2"></div>
+        <div class="charactor__body"></div>
+      </div>
+      <div class="character wakeup">
+        <div class="character__face"></div>
+        <div class="charactor__face2"></div>
+        <div class="charactor__body"></div>
+      </div>
+      <div class="character">
+        <div class="character__face"></div>
+        <div class="charactor__face2"></div>
+        <div class="charactor__body"></div>
+      </div>
+    </div>
+  </a>
+
+  <a href="/developing-readers" class="button button--pen">
+    <div class="button__wrapper">
+      <span class="button__text">2nd Grade</span>
+    </div>
+    <div class="characterBox">
+      <div class="character wakeup">
+        <div class="character__face"></div>
+        <div class="charactor__face2"></div>
+      </div>
+      <div class="character wakeup">
+        <div class="character__face"></div>
+        <div class="charactor__face2"></div>
+      </div>
+      <div class="character">
+        <div class="character__face"></div>
+        <div class="charactor__face2"></div>
+      </div>
+    </div>
+  </a>
+
+  <a href="/transitional-readers" class="button button--piyo">
+    <div class="button__wrapper">
+      <span class="button__text">3rd Grade</span>
+    </div>
+    <div class="characterBox">
+      <div class="character wakeup">
+        <div class="character__face"></div>
+      </div>
+      <div class="character wakeup">
+        <div class="character__face"></div>
+      </div>
+      <div class="character">
+        <div class="character__face"></div>
+      </div>
+    </div>
+  </a>
+
+  <a href="/fluent-readers" class="button button--hoo">
+    <div class="button__wrapper">
+      <span class="button__text">4th Grade</span>
+    </div>
+    <div class="characterBox">
+      <div class="character wakeup">
+        <div class="character__face"></div>
+        <div class="charactor__face2"></div>
+        <div class="charactor__body"></div>
+      </div>
+      <div class="character wakeup">
+        <div class="character__face"></div>
+        <div class="charactor__face2"></div>
+        <div class="charactor__body"></div>
+      </div>
+      <div class="character">
+        <div class="character__face"></div>
+        <div class="charactor__face2"></div>
+        <div class="charactor__body"></div>
+      </div>
+    </div>
+  </a>
+
+  <a href="/proficient-readers" class="button button--pen">
+    <div class="button__wrapper">
+      <span class="button__text">5th Grade</span>
+    </div>
+    <div class="characterBox">
+      <div class="character wakeup">
+        <div class="character__face"></div>
+        <div class="charactor__face2"></div>
+      </div>
+      <div class="character wakeup">
+        <div class="character__face"></div>
+        <div class="charactor__face2"></div>
+      </div>
+      <div class="character">
+        <div class="character__face"></div>
+        <div class="charactor__face2"></div>
+      </div>
+    </div>
+  </a>
+</div>
+<hr />
+<h1>Recently Created Stories</h1>
+<div class="blog-posts-wrapper">
+  <div id="blog-posts"></div>
+</div>
+
+<script>
+  const categoryLabels = {
+    1: "Emergent Readers: Levels A-C",
+    2: "Early Readers: Levels D-I",
+    3: "Developing Readers: Levels J-M",
+    4: "Transitional Readers: Levels N-P",
+    5: "Fluent Readers: Levels Q-S",
+    6: "Proficient Readers: Levels T-V",
+  };
+
+  const categoryLinks = {
+    1: "/emergent-readers",
+    2: "/early-readers",
+    3: "/developing-readers",
+    4: "/transitional-readers",
+    5: "/fluent-readers",
+    6: "/proficient-readers",
+  };
+
+  fetch("/stored-data")
+    .then((response) => response.json())
+    .then((data) => {
+      const blogPostsContainer = document.getElementById("blog-posts");
+
+      for (let i = 0; i < data.length; i++) {
+        const post = data[i];
+
+        const postElement = document.createElement("div");
+        postElement.className = "reading-level";
+
+        const nameElement = document.createElement("h2");
+        nameElement.textContent = post.name;
+        postElement.appendChild(nameElement);
+
+        const categoryElement = document.createElement("a");
+        categoryElement.textContent =
+          categoryLabels[post.category] || "Uncategoried";
+        categoryElement.href = categoryLinks[post.category] || "#";
+        postElement.appendChild(categoryElement);
+
+        const contentElement = document.createElement("h3");
+        contentElement.textContent = post.content;
+        postElement.appendChild(contentElement);
+
+        const readMoreButton = document.createElement("a");
+        readMoreButton.textContent = "Read More";
+        readMoreButton.href = `/stories/${post.id}`;
+        readMoreButton.style.display = "inline-block";
+        readMoreButton.style.padding = "10px";
+        readMoreButton.style.backgroundColor = "blue";
+        readMoreButton.style.color = "white";
+        readMoreButton.style.textDecoration = "none";
+        readMoreButton.style.borderRadius = "5px";
+        postElement.appendChild(readMoreButton);
+
+        blogPostsContainer.appendChild(postElement);
+      }
+    });
+</script>
+
 <p>{{ session['fav_number'] }} test if its reclasdf</p>
 
 {% if session['fav_none'] %}
 <p>{{ session['fav_none'] }} test if its reclasdf</p>
+
 {% endif %} {% endblock %}

@@ -1,0 +1,46 @@
+{% extends 'base.html' %} {% block title %}story detail{% endblock %} {% block
+content %}
+
+<div class="storybook-page">
+  <img
+    src="https://img.freepik.com/free-vector/ripped-newspaper-flower-stem-old-brown-paper-banner-vector_53876-136540.jpg?w=826&t=st=1688159856~exp=1688160456~hmac=b078d093a39d47d93a260801fd292cb2bab6dcdc69c4f6c8c462d0980020ca9d"
+    alt="storybook background"
+  />
+  <div class="storybook-content">
+    <h1>{{ story.name }}</h1>
+    <p id="category-label"></p>
+    <h2>{{ story.species }}</h2>
+    <br />
+    <a id="back-link" href="#">Go back</a>
+
+    <input type="hidden" id="hunger-value" value="{{ story.hunger }}" />
+  </div>
+</div>
+
+<script>
+  const categoryLabels = {
+    1: "Emergent Readers: Levels A-C (Pre K - K)",
+    2: "Early Readers: Levels D-I (1st Grade)",
+    3: "Developing Readers: Levels J-M (2nd Grade)",
+    4: "Transitional Readers: Levels N-P (3rd Grade)",
+    5: "Fluent Readers: Levels Q-S (4th Grade)",
+    6: "Proficient Readers: Levels T-V (5th Grade)",
+  };
+
+  const categoryLinks = {
+    1: "/emergent-readers",
+    2: "/early-readers",
+    3: "/developing-readers",
+    4: "/transitional-readers",
+    5: "/fluent-readers",
+    6: "/proficient-readers",
+  };
+
+  const hungerValue = document.getElementById("hunger-value").value;
+
+  const categoryLabel = categoryLabels[hungerValue];
+
+  document.getElementById("category-label").textContent = categoryLabel;
+  document.getElementById("back-link").href = categoryLinks[hungerValue];
+</script>
+{% endblock %}

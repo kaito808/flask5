@@ -1,0 +1,71 @@
+{% extends 'base.html' %} {% block title %}PreK - Kindergarten{% endblock %} {%
+block content %}
+<h1>5th Grade</h1>
+<h2>(Proficient Readers: Levels T-V)</h2>
+
+<div id="blog-posts"></div>
+
+<script>
+  const categoryLabels = {
+    1: "Emergent Readers: Levels A-C",
+    2: "Early Readers: Levels D-I",
+    3: "Developing Readers: Levels J-M",
+    4: "Transitional Readers: Levels N-P",
+    5: "Fluent Readers: Levels Q-S",
+    6: "Proficient Readers: Levels T-V",
+  };
+
+  const categoryLinks = {
+    1: "/emergent-readers",
+    2: "/early-readers",
+    3: "/developing-readers",
+    4: "/transitional-readers",
+    5: "/fluent-readers",
+    6: "/proficient-readers",
+  };
+
+  fetch("/stored-data")
+    .then((response) => response.json())
+    .then((data) => {
+      const blogPostsContainer = document.getElementById("blog-posts");
+
+      for (let i = 0; i < data.length; i++) {
+        const post = data[i];
+        if (post.category == 6) {
+          const postElement = document.createElement("div");
+          postElement.className = "reading-level";
+
+          const nameElement = document.createElement("h2");
+          nameElement.textContent = post.name;
+          postElement.appendChild(nameElement);
+
+          const categoryElement = document.createElement("a");
+          categoryElement.textContent =
+            categoryLabels[post.category] || "Uncategoried";
+          categoryElement.href = categoryLinks[post.category] || "#";
+          postElement.appendChild(categoryElement);
+
+          const contentElement = document.createElement("h3");
+          contentElement.textContent = post.content;
+          postElement.appendChild(contentElement);
+
+          const readMoreButton = document.createElement("a");
+          readMoreButton.textContent = "Read More";
+
+          readMoreButton.href = `/stories/${post.id}`;
+
+          readMoreButton.style.display = "inline-block";
+          readMoreButton.style.padding = "10px";
+          readMoreButton.style.backgroundColor = "blue";
+          readMoreButton.style.color = "white";
+          readMoreButton.style.textDecoration = "none";
+          readMoreButton.style.borderRadius = "5px";
+          postElement.appendChild(readMoreButton);
+
+          blogPostsContainer.appendChild(postElement);
+        }
+      }
+    });
+</script>
+
+{% endblock %}

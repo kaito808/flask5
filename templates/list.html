@@ -1,0 +1,106 @@
+{% extends 'base.html' %} {% block title %}story detail{% endblock %} {% block
+content %}
+<div class="form-container">
+  <form method="POST">
+    <p>Title: <input name="name" required /></p>
+    <p>
+      Choose the Level:
+      <select name="hunger">
+        <option value="1">Emergent Readers: Levels A-C</option>
+        <option value="2">Early Readers: Levels D-I</option>
+        <option value="3">Developing Readers: Levels J-M</option>
+        <option value="4">Transitional Readers: Levels N-P</option>
+        <option value="5">Fluent Readers: Levels Q-S</option>
+        <option value="6">Proficient Readers: Levels T-V</option>
+      </select>
+    </p>
+    <p>Write your Story Here!: <input name="species" required /></p>
+    <button>Add your Story!</button>
+  </form>
+  <div class="form-separator">-- or --</div>
+  <form method="POST">
+    <p>All We Need is Title Here!: <input name="name" required /></p>
+    <p>
+      Choose the Level:
+      <select name="hunger">
+        <option value="1">Emergent Readers: Levels A-C</option>
+        <option value="2">Early Readers: Levels D-I</option>
+        <option value="3">Developing Readers: Levels J-M</option>
+        <option value="4">Transitional Readers: Levels N-P</option>
+        <option value="5">Fluent Readers: Levels Q-S</option>
+        <option value="6">Proficient Readers: Levels T-V</option>
+      </select>
+    </p>
+    <p>Any keywords?: <input name="species" /></p>
+    <button>Click & Generate a Story!</button>
+  </form>
+</div>
+<hr />
+<h1>Recently Created Stories</h1>
+<div class="blog-posts-wrapper">
+  <div id="blog-posts"></div>
+</div>
+
+<script>
+  const categoryLabels = {
+    1: "Emergent Readers: Levels A-C",
+    2: "Early Readers: Levels D-I",
+    3: "Developing Readers: Levels J-M",
+    4: "Transitional Readers: Levels N-P",
+    5: "Fluent Readers: Levels Q-S",
+    6: "Proficient Readers: Levels T-V",
+  };
+
+  const categoryLinks = {
+    1: "/emergent-readers",
+    2: "/early-readers",
+    3: "/developing-readers",
+    4: "/transitional-readers",
+    5: "/fluent-readers",
+    6: "/proficient-readers",
+  };
+
+  fetch("/stored-data")
+    .then((response) => response.json())
+    .then((data) => {
+      const blogPostsContainer = document.getElementById("blog-posts");
+
+      for (let i = 0; i < data.length; i++) {
+        const post = data[i];
+
+        const postElement = document.createElement("div");
+        postElement.className = "reading-level";
+
+        const nameElement = document.createElement("h2");
+        nameElement.textContent = post.name;
+        postElement.appendChild(nameElement);
+
+        const categoryElement = document.createElement("a");
+        categoryElement.textContent =
+          categoryLabels[post.category] || "Uncategoried";
+        categoryElement.href = categoryLinks[post.category] || "#";
+        postElement.appendChild(categoryElement);
+
+        const contentElement = document.createElement("h3");
+        contentElement.textContent = post.content;
+        postElement.appendChild(contentElement);
+
+        const readMoreButton = document.createElement("a");
+        readMoreButton.textContent = "Read More";
+
+        readMoreButton.href = `/stories/${post.id}`;
+
+        readMoreButton.style.display = "inline-block";
+        readMoreButton.style.padding = "10px";
+        readMoreButton.style.backgroundColor = "blue";
+        readMoreButton.style.color = "white";
+        readMoreButton.style.textDecoration = "none";
+        readMoreButton.style.borderRadius = "5px";
+        postElement.appendChild(readMoreButton);
+
+        blogPostsContainer.appendChild(postElement);
+      }
+    });
+</script>
+
+{% endblock %}

@@ -1,25 +1,33 @@
-from flask import Flask, flash, redirect, render_template, request, session
+from flask import Flask, flash, redirect, render_template, request, session, jsonify
 from flask_debugtoolbar import DebugToolbarExtension
+from models import db, connect_db, Pet
 
 app = Flask(__name__)
 
 app.config['SECRET_KEY'] = "4debug"
 debug = DebugToolbarExtension(app)
 
-# homepage
-@app.route('/')
-def index():
-    """Show homepage"""
+#database
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///capstone'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_ECHO'] = True
 
-    return """
-      <html>
-        <body>
-          <h1>I am the landing page</h1>
-        </body>
-      </html>
-      """
+connect_db(app)
+
+# homepage
+# @app.route('/')
+# def index():
+#     """Show homepage"""
+
+#     return """
+#       <html>
+#         <body>
+#           <h1>I am the landing page</h1>
+#         </body>
+#       </html>
+#       """
 # page
-@app.route('/hello')
+@app.route('/')
 def say_hello():
     """Return simple "Hello" Greeting."""
 
@@ -112,3 +120,91 @@ def some_route():
     flash("Favorite n}")
 
     return redirect("/hello")
+
+#list data
+@app.route("/stories")
+def list_stories():
+    """List stories and show add form."""
+
+    stories = Pet.query.all()
+    return render_template("list.html", stories=stories)
+
+#adding in list.html
+@app.route("/stories", methods=["POST"])
+def add_Story():
+    """Add Story and redirect to list."""
+
+    name = request.form['name']
+    species = request.form['species']
+    hunger = request.form['hunger']
+    hunger = int(hunger) if hunger else None
+
+    story = Pet(name=name, species=species, hunger=hunger)
+    db.session.add(story)
+    db.session.commit()
+
+    return redirect(f"/stories/{story.id}")
+
+
+#show data from seed.py
+@app.route("/stories/<int:story_id>")
+def show_story(story_id):
+    """Show info on a single story."""
+
+    story = Pet.query.get_or_404(story_id)
+    return render_template("detail.html", story=story)
+
+
+
+# blog page
+@app.route("/emergent-readers")
+def emergent():
+    """emergent-readers.html"""
+
+    return render_template("emergent-readers.html")
+
+@app.route("/early-readers")
+def early():
+    """early-readers.html"""
+
+    return render_template("early-readers.html")
+
+@app.route("/developing-readers")
+def developing():
+    """developing-readers.html"""
+
+    return render_template("developing-readers.html")
+
+@app.route("/transitional-readers")
+def transitional():
+    """transitional-readers.html"""
+
+    return render_template("transitional-readers.html")
+
+@app.route("/fluent-readers")
+def fluent():
+    """fluent-readers.html"""
+
+    return render_template("fluent-readers.html")
+
+@app.route("/proficient-readers")
+def proficient():
+    """proficient-readers.html"""
+
+    return render_template("proficient-readers.html")
+
+
+@app.route("/stored-data")
+def posts():
+    stories = Pet.query.all()
+
+    data = []
+    for story in stories:
+        data.append({
+            "id":story.id,
+            "name": story.name,
+            "category": story.hunger,
+            "content": story.species,
+        })
+
+    return jsonify(data)    

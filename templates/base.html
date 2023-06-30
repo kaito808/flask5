@@ -1,13 +1,43 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="UTF-8" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/bootstrap/dist/css/bootstrap.css"
+    />
+    <script src="https://unpkg.com/jquery"></script>
+    <script src="https://unpkg.com/popper"></script>
+    <script src="https://unpkg.com/bootstrap"></script>
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
+    />
+    <link rel="shortcut icon" href="/static/favicon.ico" />
+
     <title>{% block title %}TITLE GOES HERE{% endblock %}</title>
     <link rel="stylesheet" href="/static/styles.css" />
-    <!-- <script src="http://unpkg.com/jquery"></script> -->
   </head>
   <body>
-    <h1>Our Site</h1>
+    <nav class="navbar navbar-expand">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a href="/" class="navbar-brand">
+            <img
+              src="https://www.shutterstock.com/image-vector/kids-reading-playing-books-illustration-260nw-1229473165.jpg"
+              alt="logo"
+            />
+            <span>Readings for fun!</span>
+          </a>
+        </div>
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="/">Read by Levels!</a></li>
+          <li><a href="/stories">Create your own Stories!</a></li>
+        </ul>
+      </div>
+    </nav>
+    <br />
     {% block content %}BODY CONTENT GOES HERE{% endblock %}
-    <footer>Copyright by Kaito Higashi</footer>
+    <!-- <footer>Copyright by Kaito Higashi</footer> -->
   </body>
 </html>
