@@ -18,11 +18,11 @@ content %}
     <button>Add your Story!</button>
   </form>
   <div class="form-separator">-- or --</div>
-  <form method="POST">
-    <p>All We Need is Title Here!: <input name="name" required /></p>
+  <form id="gpt-form" method="POST">
+    <p>All We Need is Title Here!: <input name="name" id="title" required /></p>
     <p>
       Choose the Level:
-      <select name="hunger">
+      <select id="category">
         <option value="1">Emergent Readers: Levels A-C</option>
         <option value="2">Early Readers: Levels D-I</option>
         <option value="3">Developing Readers: Levels J-M</option>
@@ -31,8 +31,8 @@ content %}
         <option value="6">Proficient Readers: Levels T-V</option>
       </select>
     </p>
-    <p>Any keywords?: <input name="species" /></p>
-    <button>Click & Generate a Story!</button>
+    <p>Name of the Child / Main Character: <input id="character" /></p>
+    <button id="gpt-button">Click & Generate a Story!</button>
   </form>
 </div>
 <hr />
@@ -42,6 +42,48 @@ content %}
 </div>
 
 <script>
+  document.getElementById("gpt-button").addEventListener("click", function (e) {
+    e.preventDefault();
+
+    let title = document.getElementById("title").value;
+    let category = document.getElementById("category").value;
+    let character = document.getElementById("character").value;
+
+    fetch("/generate", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        prompt:
+          "please write a short story for children with the title: " +
+          title +
+          " that is sutable for the " +
+          category +
+          ". please make the storys point of view the name of the child which is " +
+          character +
+          "the story length can range from 75 words to 200 words in between emergent readers and proficient readers. please do not include the title in the response, just the story.",
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        return fetch("/save-story", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            title: title,
+            content: data.response,
+            category: category,
+          }),
+        });
+      })
+      .then((response) => response.json())
+      .then((data) => console.log(data.message))
+      .catch((error) => console.error(error));
+  });
+
   const categoryLabels = {
     1: "Emergent Readers: Levels A-C",
     2: "Early Readers: Levels D-I",

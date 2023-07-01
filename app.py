@@ -1,6 +1,8 @@
 from flask import Flask, flash, redirect, render_template, request, session, jsonify
 from flask_debugtoolbar import DebugToolbarExtension
 from models import db, connect_db, Pet
+import chatgpt
+import config
 
 app = Flask(__name__)
 
@@ -208,3 +210,31 @@ def posts():
         })
 
     return jsonify(data)    
+
+
+# chatgpt
+@app.route('/generate', methods=['POST'])
+def generate():
+    data = request.get_json()
+    response = chatgpt.generateChatResponse(data['prompt'])
+    return jsonify(response=response)
+
+@app.route("/save-story", methods=["POST"])
+def gen_Story():
+    """Add Story and redirect to list."""
+
+    data = request.get_json()
+
+    title = data.get('title')
+    content = data.get('content')
+    category = data.get('category')
+
+    if not all([title, content, category]):
+        return jsonify({'message': 'Invalid data'}), 400
+
+    story = Pet(name=title, species=content, hunger=category)
+
+    db.session.add(story)
+    db.session.commit()
+
+    return redirect(f"/stories/{story.id}")

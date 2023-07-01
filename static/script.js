@@ -38,4 +38,4 @@ for (var i = 0; i < postsInCategory.length; i++) {
   blogPostsContainer.appendChild(postElement);
 }
 
-//navbar
+//chatgpt
