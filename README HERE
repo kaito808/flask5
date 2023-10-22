@@ -8,3 +8,17 @@ e. Keep the API in there, and if you have anything to say about the API then
 add some notes
 f. Identify the technology stack used to create your website
 g. Include anything else that you feel is important to share
+
+
+Designing Your Schema
+● Think about how you want to design the tables in your relational database, based
+on the API and any other additional data you might be storing, such as user login
+information.
+● What will the primary and foreign keys be? Which tables will relate to each other?
+What kind of relationships will they have?
+● Draw out how you’d like the associations to work in the Crow’s Foot notation we
+taught you. Refer to this video for a refresher.
+● Once you decided on your columns and their data types, tables and their
+relationships, primary and foreign keys, and constraints that your schema will
+have, upload a text file containing your schema design or draw it out, take a
+picture, and upload that.
